@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basoor Family Tree</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f0f4f8; min-height: 100vh; }
+  h1 { text-align: center; padding: 18px 0 4px; font-size: 22px; color: #1a3a5c; }
+  .subtitle { text-align: center; font-size: 13px; color: #5a7a9a; margin-bottom: 10px; }
+  #controls {
+    display: flex; justify-content: center; gap: 8px; padding: 8px;
+    position: sticky; top: 0; background: #f0f4f8; z-index: 100; border-bottom: 1px solid #dde4ed;
+  }
+  .btn { background: #fff; border: 1px solid #c5d3e0; border-radius: 6px; padding: 5px 14px; font-size: 13px; cursor: pointer; color: #1a3a5c; }
+  .btn:hover { background: #e6f1fb; }
+  #viewport { width: 100%; overflow: hidden; height: calc(100vh - 130px); cursor: grab; }
+  #viewport.dragging { cursor: grabbing; }
+  #scene { position: relative; transform-origin: 0 0; }
+  svg.lines { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
+
+  .couple { position: absolute; display: flex; align-items: center; gap: 5px; }
+
+  .node {
+    border-radius: 7px; padding: 5px 8px; font-size: 11px; line-height: 1.35;
+    text-align: center; width: 108px; min-height: 44px;
+    display: flex; flex-direction: column; justify-content: center; border: 1.5px solid;
+  }
+  .node .nm     { font-weight: 600; font-size: 11px; }
+  .node .tag    { font-size: 9px; margin-top: 2px; opacity: .7; }
+  .node .dec-tag { font-size: 9px; margin-top: 2px; color: #b91c1c; font-weight: 600; }
+
+  .g1.person { background: #d4edda; border-color: #5cb85c; color: #1a4a1a; }
+  .g2.person { background: #dbeafe; border-color: #60a5e8; color: #0c3060; }
+  .g3.person { background: #ede9fe; border-color: #9f7aea; color: #3b0764; }
+  .g4.person { background: #fef3c7; border-color: #f59e0b; color: #451a03; }
+  .g5.person { background: #d1fae5; border-color: #34d399; color: #064e3b; }
+
+  .spouse  { background: #fdf2f8; border-color: #d8a0cc; color: #5a1a4a; }
+
+  .connector { fill: none; stroke: #94a3b8; stroke-width: 1.5; }
+
+  .legend {
+    position: fixed; bottom: 16px; right: 16px; background: #fff;
+    border: 1px solid #dde4ed; border-radius: 10px; padding: 10px 14px;
+    font-size: 11px; color: #444; box-shadow: 0 2px 8px rgba(0,0,0,.08);
+  }
+  .leg-row { display: flex; align-items: center; gap: 7px; margin-bottom: 4px; }
+  .leg-box { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<h1>Basoor Family Tree</h1>
+<p class="subtitle">Descendants of Sardar Ram Singh &nbsp;|&nbsp; 5 Generations</p>
+
+<div id="controls">
+  <button class="btn" onclick="zoomBy(1.2)">＋ Zoom In</button>
+  <button class="btn" onclick="zoomBy(0.83)">－ Zoom Out</button>
+  <button class="btn" onclick="resetView()">⌂ Reset</button>
+  <span style="font-size:12px;color:#5a7a9a;align-self:center">Drag to pan &nbsp;|&nbsp; Scroll to zoom</span>
+</div>
+
+<div id="viewport">
+  <div id="scene">
+    <svg class="lines" id="svglines"></svg>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="leg-row"><div class="leg-box" style="background:#d4edda;border-color:#5cb85c"></div> Generation 1</div>
+  <div class="leg-row"><div class="leg-box" style="background:#dbeafe;border-color:#60a5e8"></div> Generation 2</div>
+  <div class="leg-row"><div class="leg-box" style="background:#ede9fe;border-color:#9f7aea"></div> Generation 3</div>
+  <div class="leg-row"><div class="leg-box" style="background:#fef3c7;border-color:#f59e0b"></div> Generation 4</div>
+  <div class="leg-row"><div class="leg-box" style="background:#d1fae5;border-color:#34d399"></div> Generation 5</div>
+  <div class="leg-row"><div class="leg-box" style="background:#fdf2f8;border-color:#d8a0cc"></div> Spouse</div>
+</div>
+
+<script>
+const NW = 108, NH = 44, HGAP = 20, VGAP = 84;
+
+const tree = {
+  id:'ram', name:'Sardar Ram Singh', sp:'Wife (unknown)', gen:1,
+  children:[
+    {
+      id:'joginder', name:'Joginder Singh', sp:'Inder Kaur', gen:2,
+      children:[
+        {id:'sweety', name:'Sweety Khurrana', sp:'Jija',       gen:3},
+        {id:'hanna',  name:'Hanna Bajaj',     sp:'Tony Bajaj', gen:3},
+        {id:'lovely', name:'Lovely Basoor',                    gen:3, dec:true},
+        {
+          id:'bunny', name:'Bunny Basoor', sp:'Pinky Basoor', gen:3,
+          children:[
+            {id:'parv', name:'Parv Basoor', gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'avtar', name:'Avtar Singh Basoor', sp:'Sudarshan Kaur', gen:2,
+      children:[
+        {id:'sonia_c', name:'Sonia Chug', sp:'Bittu Chug', gen:3},
+        {
+          id:'sanju', name:'Sanju Basoor', sp:'Sonia Basoor', gen:3,
+          children:[
+            {
+              id:'saman', name:'Saman Basoor', sp:'Vanshika', gen:4,
+              children:[
+                {id:'varya', name:'Varya Basoor', gen:5}
+              ]
+            },
+            {id:'sanraj', name:'Sanraj Basoor', gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'triloch', name:'Trilochan Singh', sp:'Minna Basoor', sp_tag:'Deceased', gen:2,
+      children:[
+        {
+          id:'chinky', name:'Chinky Basoor', sp:'Sona Basoor', gen:3,
+          children:[
+            {id:'guneet', name:'Guneet', gen:4},
+            {id:'jivraj', name:'Jivraj', gen:4}
+          ]
+        },
+        {id:'rasna', name:'Rasna Basoor', sp:'Happy', gen:3}
+      ]
+    },
+    {
+      id:'harjeet', name:'Harjeet Singh', sp:'Rupinder', gen:2,
+      children:[
+        {
+          id:'resham', name:'Resham', sp:'Soni', gen:3,
+          children:[
+            {id:'trishman', name:'Trishman', gen:4},
+            {id:'kiaana',   name:'Kiaana',   gen:4}
+          ]
+        },
+        {id:'rishu', name:'Rishu Basoor', gen:3}
+      ]
+    },
+    {
+      id:'daljeet', name:'Daljeet Singh',
+      sp:'Neetu Basoor', sp_dec:true,
+      sp_left:'Ritu Basoor',
+      gen:2,
+      children:[
+        {
+          id:'abhijeet', name:'Abhijeet Basoor', sp:'Meena', gen:3
+        },
+        {
+          id:'prabhjeet', name:'Prabhjeet Basoor', sp:'Binny', gen:3,
+          children:[
+            {id:'nirver', name:'Nirver Basoor', gen:4},
+            {id:'noor',   name:'Noor',          gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'ranjeet', name:'Ranjeet Singh', sp:'Dolly Basoor', gen:2,
+      children:[
+        {
+          id:'gaurav', name:'Gaurav Basoor', sp:'Namrata', gen:3,
+          children:[
+            {id:'kaira', name:'Kaira', gen:4},
+            {id:'meera', name:'Meera', gen:4}
+          ]
+        },
+        {
+          id:'gaytri', name:'Gaytri Bhargav', sp:'Vaibhav Bhargav', gen:3,
+          children:[
+            {id:'shauraya', name:'Shauraya', gen:4},
+            {id:'ruveer',   name:'Ruveer',   gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'pritam', name:'Pritam Kaur', sp:'Jija Ji', gen:2,
+      children:[
+        {id:'honey', name:'Honey Singh',  gen:3},
+        {id:'sunny', name:'Sunny Singh',  gen:3},
+        {id:'neeta', name:'Neeta Narang', gen:3}
+      ]
+    },
+    {
+      id:'moni', name:'Moni Bhan', gen:2,
+      children:[
+        {
+          id:'dimpy', name:'Dimpy Bhan', sp:'Babbi Bhan', gen:3,
+          children:[
+            {id:'suryansh', name:'Suryansh', gen:4}
+          ]
+        },
+        {id:'renu', name:'Renu Uppal', sp:'Tony Uppal', gen:3},
+        {id:'menu', name:'Menu',                        gen:3}
+      ]
+    },
+    {
+      id:'rani', name:'Rani Bedi', sp:'H. Bedi', gen:2,
+      children:[
+        {id:'joy',    name:'Joy Bedi',      gen:3, dec:true},
+        {id:'rahul',  name:'Rahul Bedi',    sp:'Ruby', gen:3},
+        {id:'preeti', name:'Preeti Chawla', gen:3}
+      ]
+    }
+  ]
+};
+
+function coupleW(node) {
+  let w = NW;
+  if (node.sp)      w += 5 + NW;
+  if (node.sp_left) w += 5 + NW;
+  return w;
+}
+
+function personOffsetX(node) {
+  return node.sp_left ? (NW + 5) : 0;
+}
+
+function subtreeWidth(node) {
+  if (!node.children || !node.children.length) return coupleW(node);
+  const childTotal = node.children.reduce((s,c) => s + subtreeWidth(c), 0) + (node.children.length - 1) * HGAP;
+  return Math.max(coupleW(node), childTotal);
+}
+
+function layout(node, x, y) {
+  const sw = subtreeWidth(node);
+  const cw = coupleW(node);
+  node._coupleX = x + sw / 2 - cw / 2;
+  node._y = y;
+  node._personX = node._coupleX + personOffsetX(node);
+
+  if (!node.children || !node.children.length) return;
+  const childTotal = node.children.reduce((s,c) => s + subtreeWidth(c), 0) + (node.children.length - 1) * HGAP;
+  let cx = x + sw / 2 - childTotal / 2;
+  for (const child of node.children) {
+    layout(child, cx, y + NH + VGAP);
+    cx += subtreeWidth(child) + HGAP;
+  }
+}
+
+layout(tree, 30, 30);
+
+const scene = document.getElementById('scene');
+const svgEl = document.getElementById('svglines');
+
+function makeNodeEl(node) {
+  const wrap = document.createElement('div');
+  wrap.className = 'couple';
+  wrap.style.left = node._coupleX + 'px';
+  wrap.style.top  = node._y + 'px';
+
+  if (node.sp_left) {
+    const el = document.createElement('div');
+    el.className = 'node spouse';
+    el.innerHTML = `<div class="nm">${node.sp_left}</div>${node.sp_left_tag ? `<div class="tag">${node.sp_left_tag}</div>` : ''}`;
+    wrap.appendChild(el);
+  }
+
+  const person = document.createElement('div');
+  person.className = `node g${node.gen} person`;
+  let inner = `<div class="nm">${node.name}</div>`;
+  if (node.dec) inner += `<div class="dec-tag">Deceased</div>`;
+  person.innerHTML = inner;
+  wrap.appendChild(person);
+
+  if (node.sp) {
+    const el = document.createElement('div');
+    el.className = 'node spouse';
+    el.innerHTML = `<div class="nm">${node.sp}</div>${node.sp_dec ? `<div class="dec-tag">Deceased</div>` : ''}${node.sp_tag ? `<div class="tag">${node.sp_tag}</div>` : ''}`;
+    wrap.appendChild(el);
+  }
+
+  scene.appendChild(wrap);
+}
+
+function drawLines(node) {
+  if (!node.children || !node.children.length) return;
+  const px = node._personX + NW / 2;
+  const py = node._y + NH;
+  const midY = py + VGAP / 2;
+
+  for (const child of node.children) {
+    const cx = child._personX + NW / 2;
+    const cy = child._y;
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('class', 'connector');
+    path.setAttribute('d', `M${px},${py} L${px},${midY} L${cx},${midY} L${cx},${cy}`);
+    svgEl.appendChild(path);
+    drawLines(child);
+  }
+}
+
+function traverse(node, fn) {
+  fn(node);
+  if (node.children) node.children.forEach(c => traverse(c, fn));
+}
+
+traverse(tree, makeNodeEl);
+drawLines(tree);
+
+let maxX = 0, maxY = 0;
+traverse(tree, n => {
+  maxX = Math.max(maxX, n._coupleX + coupleW(n) + 30);
+  maxY = Math.max(maxY, n._y + NH + 30);
+});
+svgEl.setAttribute('width',  maxX);
+svgEl.setAttribute('height', maxY);
+scene.style.width  = maxX + 'px';
+scene.style.height = maxY + 'px';
+
+let scale = 0.68, tx = 40, ty = 20;
+const vp = document.getElementById('viewport');
+
+function applyT() {
+  scene.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+}
+applyT();
+
+let drag = false, sx, sy, stx, sty;
+vp.addEventListener('mousedown', e => { drag=true; vp.classList.add('dragging'); sx=e.clientX; sy=e.clientY; stx=tx; sty=ty; });
+window.addEventListener('mousemove', e => { if(!drag) return; tx=stx+(e.clientX-sx); ty=sty+(e.clientY-sy); applyT(); });
+window.addEventListener('mouseup', () => { drag=false; vp.classList.remove('dragging'); });
+vp.addEventListener('wheel', e => {
+  e.preventDefault();
+  scale = Math.min(3, Math.max(0.15, scale * (e.deltaY > 0 ? 0.9 : 1.1)));
+  applyT();
+}, { passive: false });
+vp.addEventListener('touchstart', e => { const t=e.touches[0]; sx=t.clientX; sy=t.clientY; stx=tx; sty=ty; }, {passive:true});
+vp.addEventListener('touchmove',  e => { const t=e.touches[0]; tx=stx+(t.clientX-sx); ty=sty+(t.clientY-sy); applyT(); }, {passive:true});
+
+function zoomBy(f)   { scale = Math.min(3, Math.max(0.15, scale * f)); applyT(); }
+function resetView() { scale = 0.68; tx = 40; ty = 20; applyT(); }
+</script>
+</body>
+</html>
