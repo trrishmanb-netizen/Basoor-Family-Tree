@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#f0f4f8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Basoor Family Tree</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: #f0f4f8;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    background: #fff;
+    border-bottom: 1px solid #dde4ed;
+    padding: 10px 12px 8px;
+    flex-shrink: 0;
+    z-index: 100;
+  }
+  h1 { font-size: 18px; color: #1a3a5c; text-align: center; }
+  .subtitle { font-size: 11px; color: #5a7a9a; text-align: center; margin-top: 2px; }
+
+  /* ── Controls ── */
+  #controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: #f0f4f8;
+    border-bottom: 1px solid #dde4ed;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+  }
+  .btn {
+    background: #fff;
+    border: 1px solid #c5d3e0;
+    border-radius: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    color: #1a3a5c;
+    touch-action: manipulation;
+    user-select: none;
+    min-width: 44px;
+    min-height: 36px;
+  }
+  .btn:active { background: #dbeafe; }
+  .hint { font-size: 11px; color: #8aa0b8; }
+
+  /* ── Viewport ── */
+  #viewport {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    touch-action: none;
+    cursor: grab;
+  }
+  #viewport.dragging { cursor: grabbing; }
+  #scene { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+
+  svg.lines {
+    position: absolute; top: 0; left: 0;
+    overflow: visible; pointer-events: none;
+  }
+
+  /* ── Nodes ── */
+  .couple {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .node {
+    border-radius: 8px;
+    padding: 5px 7px;
+    font-size: 11px;
+    line-height: 1.35;
+    text-align: center;
+    width: 108px;
+    min-height: 44px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1.5px solid;
+  }
+  .node .nm      { font-weight: 700; font-size: 11px; word-break: break-word; }
+  .node .tag     { font-size: 9px; margin-top: 2px; opacity: .7; }
+  .node .dec-tag { font-size: 9px; margin-top: 2px; color: #b91c1c; font-weight: 700; }
+
+  .g1.person { background: #d4edda; border-color: #5cb85c; color: #1a4a1a; }
+  .g2.person { background: #dbeafe; border-color: #60a5e8; color: #0c3060; }
+  .g3.person { background: #ede9fe; border-color: #9f7aea; color: #3b0764; }
+  .g4.person { background: #fef3c7; border-color: #f59e0b; color: #451a03; }
+  .g5.person { background: #d1fae5; border-color: #34d399; color: #064e3b; }
+  .spouse    { background: #fdf2f8; border-color: #d8a0cc; color: #5a1a4a; }
+
+  .connector { fill: none; stroke: #94a3b8; stroke-width: 1.5; }
+
+  /* ── Legend ── */
+  #legend {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #dde4ed;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 10px;
+    color: #444;
+    box-shadow: 0 2px 10px rgba(0,0,0,.1);
+    z-index: 50;
+    line-height: 1.6;
+  }
+  .leg-row { display: flex; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .leg-box { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+
+  /* ── Mini-map hint for mobile ── */
+  #pinhint {
+    position: absolute;
+    bottom: 12px; left: 12px;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #dde4ed;
+    border-radius: 8px;
+    padding: 5px 9px;
+    font-size: 10px;
+    color: #5a7a9a;
+    z-index: 50;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Basoor Family Tree</h1>
+  <p class="subtitle">Descendants of Sardar Ram Singh &nbsp;&bull;&nbsp; 5 Generations</p>
+</header>
+
+<div id="controls">
+  <button class="btn" onclick="zoomBy(1.25)" aria-label="Zoom in">＋</button>
+  <button class="btn" onclick="zoomBy(0.8)"  aria-label="Zoom out">－</button>
+  <button class="btn" onclick="resetView()"  aria-label="Reset view">Reset</button>
+  <span class="hint">Pinch or scroll to zoom &nbsp;&bull;&nbsp; Drag to pan</span>
+</div>
+
+<div id="viewport">
+  <div id="scene">
+    <svg class="lines" id="svglines"></svg>
+  </div>
+  <div id="legend">
+    <div class="leg-row"><div class="leg-box" style="background:#d4edda;border-color:#5cb85c"></div>Generation 1</div>
+    <div class="leg-row"><div class="leg-box" style="background:#dbeafe;border-color:#60a5e8"></div>Generation 2</div>
+    <div class="leg-row"><div class="leg-box" style="background:#ede9fe;border-color:#9f7aea"></div>Generation 3</div>
+    <div class="leg-row"><div class="leg-box" style="background:#fef3c7;border-color:#f59e0b"></div>Generation 4</div>
+    <div class="leg-row"><div class="leg-box" style="background:#d1fae5;border-color:#34d399"></div>Generation 5</div>
+    <div class="leg-row"><div class="leg-box" style="background:#fdf2f8;border-color:#d8a0cc"></div>Spouse</div>
+  </div>
+  <div id="pinhint">Pinch to zoom on mobile</div>
+</div>
+
+<script>
+const NW = 108, NH = 44, HGAP = 20, VGAP = 84;
+
+const tree = {
+  id:'ram', name:'Sardar Ram Singh', sp:'Wife (unknown)', gen:1,
+  children:[
+    {
+      id:'joginder', name:'Joginder Singh', sp:'Inder Kaur', gen:2,
+      children:[
+        {id:'sweety', name:'Sweety Khurrana', sp:'Jija',       gen:3},
+        {id:'hanna',  name:'Hanna Bajaj',     sp:'Tony Bajaj', gen:3},
+        {id:'lovely', name:'Lovely Basoor',                    gen:3, dec:true},
+        {
+          id:'bunny', name:'Bunny Basoor', sp:'Pinky Basoor', gen:3,
+          children:[
+            {id:'parv', name:'Parv Basoor', gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'avtar', name:'Avtar Singh Basoor', sp:'Sudarshan Kaur', gen:2,
+      children:[
+        {id:'sonia_c', name:'Sonia Chug', sp:'Bittu Chug', gen:3},
+        {
+          id:'sanju', name:'Sanju Basoor', sp:'Sonia Basoor', gen:3,
+          children:[
+            {
+              id:'saman', name:'Saman Basoor', sp:'Vanshika', gen:4,
+              children:[
+                {id:'varya', name:'Varya Basoor', gen:5}
+              ]
+            },
+            {id:'sanraj', name:'Sanraj Basoor', gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'triloch', name:'Trilochan Singh', sp:'Minna Basoor', sp_dec:true, gen:2,
+      children:[
+        {
+          id:'chinky', name:'Chinky Basoor', sp:'Sona Basoor', gen:3,
+          children:[
+            {id:'guneet', name:'Guneet', gen:4},
+            {id:'jivraj', name:'Jivraj', gen:4}
+          ]
+        },
+        {id:'rasna', name:'Rasna Basoor', sp:'Happy', gen:3}
+      ]
+    },
+    {
+      id:'harjeet', name:'Harjeet Singh', sp:'Rupinder', gen:2,
+      children:[
+        {
+          id:'resham', name:'Resham', sp:'Soni', gen:3,
+          children:[
+            {id:'trishman', name:'Trishman', gen:4},
+            {id:'kiaana',   name:'Kiaana',   gen:4}
+          ]
+        },
+        {id:'rishu', name:'Rishu Basoor', gen:3}
+      ]
+    },
+    {
+      id:'daljeet', name:'Daljeet Singh',
+      sp:'Neetu Basoor', sp_dec:true,
+      sp_left:'Ritu Basoor',
+      gen:2,
+      children:[
+        {id:'abhijeet',  name:'Abhijeet Basoor',  sp:'Meena', gen:3},
+        {
+          id:'prabhjeet', name:'Prabhjeet Basoor', sp:'Binny', gen:3,
+          children:[
+            {id:'nirver', name:'Nirver Basoor', gen:4},
+            {id:'noor',   name:'Noor',          gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'ranjeet', name:'Ranjeet Singh', sp:'Dolly Basoor', gen:2,
+      children:[
+        {
+          id:'gaurav', name:'Gaurav Basoor', sp:'Namrata', gen:3,
+          children:[
+            {id:'kaira', name:'Kaira', gen:4},
+            {id:'meera', name:'Meera', gen:4}
+          ]
+        },
+        {
+          id:'gaytri', name:'Gaytri Bhargav', sp:'Vaibhav Bhargav', gen:3,
+          children:[
+            {id:'shauraya', name:'Shauraya', gen:4},
+            {id:'ruveer',   name:'Ruveer',   gen:4}
+          ]
+        }
+      ]
+    },
+    {
+      id:'pritam', name:'Pritam Kaur', sp:'Jija Ji', gen:2,
+      children:[
+        {id:'honey', name:'Honey Singh',  gen:3},
+        {id:'sunny', name:'Sunny Singh',  gen:3},
+        {id:'neeta', name:'Neeta Narang', gen:3}
+      ]
+    },
+    {
+      id:'moni', name:'Moni Bhan', gen:2,
+      children:[
+        {
+          id:'dimpy', name:'Dimpy Bhan', sp:'Babbi Bhan', gen:3,
+          children:[
+            {id:'suryansh', name:'Suryansh', gen:4}
+          ]
+        },
+        {id:'renu', name:'Renu Uppal', sp:'Tony Uppal', gen:3},
+        {id:'menu', name:'Menu',                        gen:3}
+      ]
+    },
+    {
+      id:'rani', name:'Rani Bedi', sp:'H. Bedi', gen:2,
+      children:[
+        {id:'joy',    name:'Joy Bedi',      gen:3, dec:true},
+        {id:'rahul',  name:'Rahul Bedi',    sp:'Ruby', gen:3},
+        {id:'preeti', name:'Preeti Chawla', gen:3}
+      ]
+    }
+  ]
+};
+
+/* ── Layout engine ── */
+function coupleW(n) {
+  let w = NW;
+  if (n.sp)      w += 5 + NW;
+  if (n.sp_left) w += 5 + NW;
+  return w;
+}
+function personOffX(n) { return n.sp_left ? NW + 5 : 0; }
+function subtreeW(n) {
+  if (!n.children || !n.children.length) return coupleW(n);
+  const cw = n.children.reduce((s,c) => s + subtreeW(c), 0) + (n.children.length - 1) * HGAP;
+  return Math.max(coupleW(n), cw);
+}
+function layout(n, x, y) {
+  const sw = subtreeW(n), cw = coupleW(n);
+  n._cx = x + sw/2 - cw/2;
+  n._y  = y;
+  n._px = n._cx + personOffX(n);
+  if (!n.children || !n.children.length) return;
+  const cTotal = n.children.reduce((s,c) => s + subtreeW(c), 0) + (n.children.length-1)*HGAP;
+  let lx = x + sw/2 - cTotal/2;
+  for (const c of n.children) { layout(c, lx, y + NH + VGAP); lx += subtreeW(c) + HGAP; }
+}
+layout(tree, 30, 30);
+
+/* ── Render ── */
+const scene = document.getElementById('scene');
+const svg   = document.getElementById('svglines');
+
+function makeEl(n) {
+  const wrap = document.createElement('div');
+  wrap.className = 'couple';
+  wrap.style.left = n._cx + 'px';
+  wrap.style.top  = n._y  + 'px';
+
+  if (n.sp_left) {
+    const el = document.createElement('div');
+    el.className = 'node spouse';
+    el.innerHTML = `<div class="nm">${n.sp_left}</div>`;
+    wrap.appendChild(el);
+  }
+
+  const p = document.createElement('div');
+  p.className = `node g${n.gen} person`;
+  p.innerHTML = `<div class="nm">${n.name}</div>${n.dec ? '<div class="dec-tag">Deceased</div>' : ''}`;
+  wrap.appendChild(p);
+
+  if (n.sp) {
+    const el = document.createElement('div');
+    el.className = 'node spouse';
+    el.innerHTML = `<div class="nm">${n.sp}</div>${n.sp_dec ? '<div class="dec-tag">Deceased</div>' : ''}`;
+    wrap.appendChild(el);
+  }
+  scene.appendChild(wrap);
+}
+
+function drawLines(n) {
+  if (!n.children || !n.children.length) return;
+  const px = n._px + NW/2, py = n._y + NH, mid = py + VGAP/2;
+  for (const c of n.children) {
+    const cx = c._px + NW/2, cy = c._y;
+    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+    path.setAttribute('class','connector');
+    path.setAttribute('d',`M${px},${py} L${px},${mid} L${cx},${mid} L${cx},${cy}`);
+    svg.appendChild(path);
+    drawLines(c);
+  }
+}
+
+function traverse(n, fn) { fn(n); if (n.children) n.children.forEach(c => traverse(c, fn)); }
+
+traverse(tree, makeEl);
+drawLines(tree);
+
+let maxX = 0, maxY = 0;
+traverse(tree, n => {
+  maxX = Math.max(maxX, n._cx + coupleW(n) + 30);
+  maxY = Math.max(maxY, n._y + NH + 30);
+});
+svg.setAttribute('width',  maxX);
+svg.setAttribute('height', maxY);
+scene.style.width  = maxX + 'px';
+scene.style.height = maxY + 'px';
+
+/* ── Pan & Zoom (mouse + touch pinch) ── */
+const vp = document.getElementById('viewport');
+let scale = 0.55, tx = 20, ty = 20;
+
+function applyT() {
+  scene.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
+}
+
+// start at a nice default — fit the root near top-centre
+(function initView() {
+  const vpW = vp.clientWidth;
+  const rootCentreX = tree._px + NW / 2;
+  tx = vpW / 2 - rootCentreX * scale;
+  ty = 20;
+  applyT();
+})();
+
+/* Mouse drag */
+let drag = false, sx, sy, stx, sty;
+vp.addEventListener('mousedown', e => {
+  drag = true; vp.classList.add('dragging');
+  sx = e.clientX; sy = e.clientY; stx = tx; sty = ty;
+});
+window.addEventListener('mousemove', e => {
+  if (!drag) return;
+  tx = stx + (e.clientX - sx);
+  ty = sty + (e.clientY - sy);
+  applyT();
+});
+window.addEventListener('mouseup', () => { drag = false; vp.classList.remove('dragging'); });
+
+/* Scroll-to-zoom (desktop) */
+vp.addEventListener('wheel', e => {
+  e.preventDefault();
+  const rect = vp.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const factor = e.deltaY < 0 ? 1.1 : 0.9;
+  const newScale = Math.min(3, Math.max(0.1, scale * factor));
+  tx = mx - (mx - tx) * (newScale / scale);
+  ty = my - (my - ty) * (newScale / scale);
+  scale = newScale;
+  applyT();
+}, { passive: false });
+
+/* Touch: single-finger pan + two-finger pinch-zoom */
+let touches = [], lastDist = null, lastMidX = 0, lastMidY = 0;
+let tStartTx, tStartTy, tStartScale;
+
+vp.addEventListener('touchstart', e => {
+  e.preventDefault();
+  touches = Array.from(e.touches);
+  if (touches.length === 1) {
+    sx = touches[0].clientX; sy = touches[0].clientY;
+    stx = tx; sty = ty; lastDist = null;
+  } else if (touches.length === 2) {
+    lastDist = Math.hypot(
+      touches[1].clientX - touches[0].clientX,
+      touches[1].clientY - touches[0].clientY
+    );
+    lastMidX = (touches[0].clientX + touches[1].clientX) / 2;
+    lastMidY = (touches[0].clientY + touches[1].clientY) / 2;
+    tStartTx = tx; tStartTy = ty; tStartScale = scale;
+  }
+}, { passive: false });
+
+vp.addEventListener('touchmove', e => {
+  e.preventDefault();
+  touches = Array.from(e.touches);
+  const rect = vp.getBoundingClientRect();
+
+  if (touches.length === 1 && lastDist === null) {
+    tx = stx + (touches[0].clientX - sx);
+    ty = sty + (touches[0].clientY - sy);
+    applyT();
+  } else if (touches.length === 2) {
+    const dist = Math.hypot(
+      touches[1].clientX - touches[0].clientX,
+      touches[1].clientY - touches[0].clientY
+    );
+    const midX = (touches[0].clientX + touches[1].clientX) / 2 - rect.left;
+    const midY = (touches[0].clientY + touches[1].clientY) / 2 - rect.top;
+    const factor = dist / lastDist;
+    const newScale = Math.min(3, Math.max(0.1, scale * factor));
+    tx = midX - (lastMidX - rect.left - tStartTx) * (newScale / tStartScale);
+    ty = midY - (lastMidY - rect.top  - tStartTy) * (newScale / tStartScale);
+    scale = newScale;
+    lastDist = dist;
+    tStartTx = tx - (midX - (midX - tx));
+    // simpler continuous update:
+    tx = tStartTx + (midX - (lastMidX - rect.left));
+    ty = tStartTy + (midY - (lastMidY - rect.top));
+    applyT();
+  }
+}, { passive: false });
+
+vp.addEventListener('touchend', e => {
+  touches = Array.from(e.touches);
+  if (touches.length < 2) lastDist = null;
+  if (touches.length === 1) {
+    sx = touches[0].clientX; sy = touches[0].clientY;
+    stx = tx; sty = ty;
+  }
+}, { passive: false });
+
+function zoomBy(f) {
+  const cx = vp.clientWidth / 2, cy = vp.clientHeight / 2;
+  const newScale = Math.min(3, Math.max(0.1, scale * f));
+  tx = cx - (cx - tx) * (newScale / scale);
+  ty = cy - (cy - ty) * (newScale / scale);
+  scale = newScale;
+  applyT();
+}
+
+function resetView() {
+  scale = 0.55;
+  const vpW = vp.clientWidth;
+  const rootCentreX = tree._px + NW / 2;
+  tx = vpW / 2 - rootCentreX * scale;
+  ty = 20;
+  applyT();
+}
+
+// Hide pinch hint after 4s
+setTimeout(() => {
+  const h = document.getElementById('pinhint');
+  if (h) h.style.display = 'none';
+}, 4000);
+</script>
+</body>
+</html>
