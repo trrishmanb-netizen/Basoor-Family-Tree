@@ -1,705 +1,456 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#f0f4f8">
 <title>Basoor Family Tree</title>
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:Arial,sans-serif;background:#f0f4f8;height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+header{background:#fff;border-bottom:1px solid #dde4ed;padding:10px 12px 6px;flex-shrink:0;text-align:center}
+h1{font-size:18px;color:#1a3a5c}
+.sub{font-size:11px;color:#5a7a9a;margin-top:2px}
+#controls{display:flex;justify-content:center;align-items:center;gap:8px;padding:6px 10px;background:#f0f4f8;border-bottom:1px solid #dde4ed;flex-shrink:0;flex-wrap:wrap}
+.btn{background:#fff;border:1px solid #c5d3e0;border-radius:8px;padding:6px 16px;font-size:13px;cursor:pointer;color:#1a3a5c;touch-action:manipulation;user-select:none;min-height:36px}
+.btn:active{background:#dbeafe}
+.hint{font-size:11px;color:#8aa0b8}
+#viewport{flex:1;overflow:hidden;position:relative;touch-action:none;cursor:grab;background:#f8f9fb}
+#viewport.dragging{cursor:grabbing}
+#scene{position:absolute;top:0;left:0;transform-origin:0 0}
+#scene svg{position:absolute;top:0;left:0;overflow:visible;pointer-events:none;z-index:0}
 
-body {
-  font-family: Arial, sans-serif;
-  background: #f0f4f8;
-  height: 100dvh;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+/* ── Node cards ── */
+.node-card{
+  position:absolute;
+  background:#fff;
+  border:1.5px solid #6b8cba;
+  border-radius:6px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:4px 8px;
+  z-index:1;
+  cursor:default;
 }
+.node-card .nm{font-weight:700;font-size:10.5px;color:#1a2a3a;line-height:1.3;word-break:break-word}
+.node-card .sp{font-size:9.5px;color:#5a3a7a;font-style:italic;margin-top:2px;line-height:1.2}
+.node-card .dec-tag{font-size:8px;color:#cc0000;font-weight:700;margin-top:1px}
 
-header {
-  background: #fff;
-  border-bottom: 1px solid #dde4ed;
-  padding: 10px 12px 6px;
-  flex-shrink: 0;
-  text-align: center;
-}
-h1 { font-size: 20px; color: #1a3a5c; }
-.sub { font-size: 11px; color: #5a7a9a; margin-top: 2px; }
+/* generation colour bands */
+.g1{background:#f5e6d3;border-color:#8B4513}.g1 .nm{color:#3a1a00}
+.g2{background:#ffe4c4;border-color:#cd853f}.g2 .nm{color:#4a2a00}
+.g3{background:#fff8dc;border-color:#daa520}.g3 .nm{color:#4a3a00}
+.g4{background:#e8f5d0;border-color:#6b8e23}.g4 .nm{color:#2a3a00}
+.g5{background:#d4edda;border-color:#3a7a2a}.g5 .nm{color:#1a4010}
+.g6{background:#dbeafe;border-color:#60a5e8}.g6 .nm{color:#0c3060}
+.g7{background:#ede9fe;border-color:#9f7aea}.g7 .nm{color:#3b0764}
+.g8{background:#fef3c7;border-color:#f59e0b}.g8 .nm{color:#451a03}
+.g9{background:#d1fae5;border-color:#34d399}.g9 .nm{color:#064e3b}
 
-#controls {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  background: #f0f4f8;
-  border-bottom: 1px solid #dde4ed;
-  flex-shrink: 0;
-  flex-wrap: wrap;
-}
-.btn {
-  background: #fff;
-  border: 1px solid #c5d3e0;
-  border-radius: 8px;
-  padding: 6px 16px;
-  font-size: 13px;
-  cursor: pointer;
-  color: #1a3a5c;
-  touch-action: manipulation;
-  user-select: none;
-  min-height: 36px;
-}
-.btn:active { background: #dbeafe; }
-.hint { font-size: 11px; color: #8aa0b8; }
+.connector{fill:none;stroke:#6b8cba;stroke-width:1.5}
 
-/* viewport clips the scene */
-#viewport {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  touch-action: none;
-  cursor: grab;
-  background: #f0f4f8;
-}
-#viewport.dragging { cursor: grabbing; }
-
-/* scene holds BOTH the svg and the node divs — they move together */
-#scene {
-  position: absolute;
-  top: 0; left: 0;
-  transform-origin: 0 0;
-}
-
-/* SVG sits at z-index 0 inside scene */
-#scene svg {
-  position: absolute;
-  top: 0; left: 0;
-  overflow: visible;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* node divs sit above the svg */
-.couple {
-  position: absolute;
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  z-index: 1;
-}
-
-.node {
-  border-radius: 8px;
-  padding: 5px 7px;
-  font-size: 11px;
-  line-height: 1.35;
-  text-align: center;
-  width: 110px;
-  min-height: 44px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border: 1.5px solid;
-}
-.node .nm { font-weight: 700; font-size: 11px; word-break: break-word; }
-.node .dec-tag { font-size: 9px; margin-top: 3px; color: #b91c1c; font-weight: 700; }
-.node .role { font-size: 9px; margin-top: 2px; opacity: .65; }
-
-/* generation colours */
-.g1.person { background: #d4edda; border-color: #5cb85c; color: #1a4a1a; }
-.g2.person { background: #dbeafe; border-color: #60a5e8; color: #0c3060; }
-.g3.person { background: #ede9fe; border-color: #9f7aea; color: #3b0764; }
-.g4.person { background: #fef3c7; border-color: #f59e0b; color: #451a03; }
-.g5.person { background: #d1fae5; border-color: #34d399; color: #064e3b; }
-.spouse    { background: #fdf2f8; border-color: #d8a0cc; color: #5a1a4a; }
-.sp-hyphen { width: 14px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #94a3b8; align-self: center; }
-
-/* SVG connector lines */
-.connector { fill: none; stroke: #94a3b8; stroke-width: 1.5; }
-
-/* legend */
-#legend {
-  position: absolute;
-  bottom: 12px; right: 12px;
-  background: rgba(255,255,255,0.96);
-  border: 1px solid #dde4ed;
-  border-radius: 10px;
-  padding: 8px 12px;
-  font-size: 10px;
-  color: #444;
-  box-shadow: 0 2px 10px rgba(0,0,0,.1);
-  z-index: 200;
-  line-height: 1;
-}
-.leg-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
-.leg-row:last-child { margin-bottom: 0; }
-.leg-box { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid; flex-shrink: 0; }
+#legend{position:absolute;bottom:12px;right:12px;background:rgba(255,255,255,.96);border:1px solid #dde4ed;border-radius:10px;padding:8px 12px;font-size:10px;color:#444;z-index:200}
+.leg-row{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+.leg-box{width:12px;height:12px;border-radius:3px;border:1.5px solid;flex-shrink:0}
 </style>
 </head>
 <body>
-
 <header>
   <h1>Basoor Family Tree</h1>
-  <p class="sub">Descendants of Sardar Ram Singh Basoor &nbsp;&bull;&nbsp; 5 Generations</p>
+  <p class="sub">Descendants of Ch. Laik Singh &nbsp;&bull;&nbsp; 9 Generations</p>
 </header>
-
 <div id="controls">
   <button class="btn" onclick="zoomBy(1.25)">＋ Zoom In</button>
   <button class="btn" onclick="zoomBy(0.8)">－ Zoom Out</button>
   <button class="btn" onclick="resetView()">Reset</button>
   <span class="hint">Drag to pan &nbsp;&bull;&nbsp; Scroll / pinch to zoom</span>
 </div>
-
 <div id="viewport">
   <div id="scene">
     <svg id="svglines"></svg>
   </div>
-
   <div id="legend">
-    <div class="leg-row"><div class="leg-box" style="background:#d4edda;border-color:#5cb85c"></div>Generation 1</div>
-    <div class="leg-row"><div class="leg-box" style="background:#dbeafe;border-color:#60a5e8"></div>Generation 2</div>
-    <div class="leg-row"><div class="leg-box" style="background:#ede9fe;border-color:#9f7aea"></div>Generation 3</div>
-    <div class="leg-row"><div class="leg-box" style="background:#fef3c7;border-color:#f59e0b"></div>Generation 4</div>
-    <div class="leg-row"><div class="leg-box" style="background:#d1fae5;border-color:#34d399"></div>Generation 5</div>
-    <div class="leg-row"><div class="leg-box" style="background:#fdf2f8;border-color:#d8a0cc"></div>Spouse</div>
+    <div class="leg-row"><div class="leg-box" style="background:#f5e6d3;border-color:#8B4513"></div>Gen 1 — Ancestors</div>
+    <div class="leg-row"><div class="leg-box" style="background:#d4edda;border-color:#3a7a2a"></div>Gen 5 — Ram Singh</div>
+    <div class="leg-row"><div class="leg-box" style="background:#dbeafe;border-color:#60a5e8"></div>Gen 6 — Children</div>
+    <div class="leg-row"><div class="leg-box" style="background:#ede9fe;border-color:#9f7aea"></div>Gen 7 — Grandchildren</div>
+    <div class="leg-row"><div class="leg-box" style="background:#fef3c7;border-color:#f59e0b"></div>Gen 8</div>
+    <div class="leg-row"><div class="leg-box" style="background:#d1fae5;border-color:#34d399"></div>Gen 9</div>
+    <div class="leg-row"><div class="leg-box" style="background:#fff;border-color:#cc0000"></div><span style="color:#cc0000">Red text = Deceased</span></div>
+    <div class="leg-row"><div class="leg-box" style="background:#fff;border-color:#5a3a7a"></div><span style="color:#5a3a7a;font-style:italic">Italic = Spouse</span></div>
   </div>
 </div>
-
 <script>
-/* ─────────────────────────────────────────
-   CONSTANTS
-───────────────────────────────────────── */
-const NW = 110;   // node width
-const NH = 44;    // node height
-const GAP = 14;   // hyphen connector width
-const HGAP = 22;  // horizontal gap between subtrees
-const VGAP = 80;  // vertical gap between generations
-
-/* ─────────────────────────────────────────
-   TREE DATA
-   sp       = right spouse name
-   sp_dec   = true → show Deceased under right spouse
-   sp_left  = left spouse name (for Daljeet)
-   dec      = true → show Deceased under person
-───────────────────────────────────────── */
 const tree = {
-  id:'laik', name:'Chaudhry Laik Singh', gen:1, dec:true,
+  id:'laik', name:'Ch. Laik Singh', gen:1, dec:true,
   children:[
-    { id:'swai', name:'Chaudhry Swai Singh', gen:2, dec:true,
+    { id:'swai', name:'Ch. Swai Singh', gen:2, dec:true,
       children:[
-        { id:'rattan', name:'Chaudhry Rattan Singh', gen:3, dec:true,
+        { id:'rattan', name:'Ch. Rattan Singh', gen:3, dec:true,
           children:[
             { id:'suba',  name:'Ch. Suba Singh',  gen:4, dec:true },
-            { id:'jwala', name:'Ch. Jwala Singh', gen:4, dec:true },
-            { id:'sham',  name:'Ch. Sham Singh',  gen:4, dec:true },
-            { id:'amir',  name:'Ch. Amir Singh',  gen:4, dec:true,
+            { id:'jwala', name:'Ch. Jwala Singh',  gen:4, dec:true },
+            { id:'sham',  name:'Ch. Sham Singh',   gen:4, dec:true },
+            { id:'amir',  name:'Ch. Amir Singh',   gen:4, dec:true,
               children:[
-                { id:'ram', name:'Sardar Ram Singh Basoor', sp:'Gobind Kaur', sp_dec:true, dec:true, gen:5,
+                { id:'ram', name:'Sr. Ram Singh Basoor', sp:'Gobind Kaur', sp_dec:true, dec:true, gen:5,
                   children:[
-                    {
-                      id:'joginder', name:'Sr. Joginder Singh Basoor', sp:'Narinder Kaur Basoor', sp_dec:true, dec:true, gen:2,
+                    { id:'joginder', name:'Sr. Joginder Singh Basoor', sp:'Narinder Kaur Basoor', sp_dec:true, dec:true, gen:6,
                       children:[
-                        {
-                          id:'sweety', name:'Sweety Khurrana', sp:'Gurpreet Singh Khurrana', gen:3,
+                        { id:'sweety', name:'Sweety Khurrana', sp:'Gurpreet Singh Khurrana', gen:7,
                           children:[
-                            { id:'karan', name:'Karan Khurrana', sp:'Puneet Kaur Khurrana', gen:4 },
-                            { id:'kirti', name:'Kirti Chhabra (Gudia)', sp:'Unknown', gen:4 }
-                          ]
-                        },
-                        {
-                          id:'hanna', name:'Hanna Bajaj', sp:'Tony Bajaj', gen:3,
+                            { id:'karan', name:'Karan Khurrana', sp:'Puneet Kaur Khurrana', gen:8 },
+                            { id:'kirti', name:'Kirti Chhabra (Gudia)', sp:'Unknown', gen:8 }
+                          ]},
+                        { id:'hanna', name:'Hanna Bajaj', sp:'Tony Bajaj', gen:7,
                           children:[
-                            {
-                              id:'jitin', name:'Jitin Bajaj', sp:'Rashleen Kaur', gen:4,
+                            { id:'jitin', name:'Jitin Bajaj', sp:'Rashleen Kaur', gen:8,
+                              children:[ { id:'jitin_son', name:'Sanraj Bajaj', gen:9 } ] },
+                            { id:'reena', name:'Reena Bajaj', gen:8 }
+                          ]},
+                        { id:'lovely', name:'Lovely Basoor', gen:7, dec:true },
+                        { id:'bunny', name:'Bunny Basoor', sp:'Pinky Basoor', gen:7,
+                          children:[ { id:'parv', name:'Parv Basoor', gen:8 } ] }
+                      ]},
+                    { id:'avtar', name:'Sr. Avtar Singh Basoor', sp:'Sudarshan Kaur', sp_dec:true, dec:true, gen:6,
+                      children:[
+                        { id:'sonia_c', name:'Sonia Chug', sp:'Bittu Chug', gen:7,
+                          children:[
+                            { id:'karan_chug', name:'Karan Chug', sp:'Sharon Chug', gen:8 },
+                            { id:'saiba', name:'Saiba Chug', gen:8 }
+                          ]},
+                        { id:'sanju', name:'Sanju Basoor', sp:'Sonia Basoor', gen:7,
+                          children:[
+                            { id:'saman', name:'Saman Basoor', sp:'Vanshika', gen:8,
+                              children:[ { id:'varya', name:'Varya Basoor', gen:9 } ] },
+                            { id:'sanraj', name:'Sanraj Basoor', gen:8 }
+                          ]}
+                      ]},
+                    { id:'triloch', name:'Sr. Trilochan Singh', sp:'Minna Basoor', sp_dec:true, gen:6,
+                      children:[
+                        { id:'chinky', name:'Chinky Basoor', sp:'Sona Basoor', gen:7,
+                          children:[
+                            { id:'guneet', name:'Gunnet Kaur Basoor', gen:8 },
+                            { id:'jivraj', name:'Jivraj Singh Basoor', gen:8 }
+                          ]},
+                        { id:'rasna', name:'Rasna Bedi', sp:'Happy Bedi', gen:7,
+                          children:[
+                            { id:'mahima', name:'Mahima Bedi', gen:8 },
+                            { id:'jia', name:'Jia Bedi', gen:8 }
+                          ]}
+                      ]},
+                    { id:'harjeet', name:'Sr. Harjeet Singh', sp:'Rupinder Kaur', dec:true, gen:6,
+                      children:[
+                        { id:'resham', name:'Resham Basoor', sp:'Soni Basoor', gen:7,
+                          children:[
+                            { id:'trishman', name:'Trishman Basoor', gen:8 },
+                            { id:'kiaana', name:'Kiaana Basoor', gen:8 }
+                          ]},
+                        { id:'rishu', name:'Rishu Basoor', gen:7 }
+                      ]},
+                    { id:'daljeet', name:'Sr. Daljeet Singh', sp:'Neetu Basoor', sp_dec:true, sp2:'Ritu Basoor', gen:6,
+                      children:[
+                        { id:'abhijeet', name:'Abhijeet Basoor', sp:'Meena', gen:7 },
+                        { id:'prabhjeet', name:'Prabhjeet Basoor', sp:'Binny Basoor', gen:7,
+                          children:[
+                            { id:'noor', name:'Harnoor Kaur Basoor', gen:8 },
+                            { id:'nirver', name:'Nirver Basoor', gen:8 }
+                          ]}
+                      ]},
+                    { id:'ranjeet', name:'Sr. Ranjeet Singh', sp:'Dolly Basoor', gen:6,
+                      children:[
+                        { id:'gaurav', name:'Gaurav Basoor', sp:'Namrata Basoor', gen:7,
+                          children:[
+                            { id:'kaira', name:'Kaira Basoor', gen:8 },
+                            { id:'meera', name:'Meera Basoor', gen:8 }
+                          ]},
+                        { id:'gaytri', name:'Gaytri Bhargav', sp:'Vaibhav Bhargav', gen:7,
+                          children:[
+                            { id:'shauraya', name:'Shaurya Bhargav', gen:8 },
+                            { id:'ruveer', name:'Ruveer Bhargav', gen:8 }
+                          ]}
+                      ]},
+                    { id:'pritam', name:'Pritam Kaur', sp:'Davinder Singh Malhotra', sp_dec:true, gen:6,
+                      children:[
+                        { id:'neeta', name:'Neena Narang', sp:'Satinder Narang', gen:7,
+                          children:[
+                            { id:'tanya', name:'Tanya Garg', sp:'Gaurav Garg', gen:8,
                               children:[
-                                { id:'jitin_son', name:'Sanraj Bajaj', gen:5 }
-                              ]
-                            },
-                            { id:'reena', name:'Reena Bajaj', gen:4 }
-                          ]
-                        },
-                        { id:'lovely', name:'Lovely Basoor', gen:3, dec:true },
-                        {
-                          id:'bunny', name:'Bunny Basoor', sp:'Pinky Basoor', gen:3,
-                          children:[
-                            { id:'parv', name:'Parv Basoor', gen:4 }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'avtar', name:'Sr. Avtar Singh Basoor', sp:'Sudarshan Kaur', sp_dec:true, dec:true, gen:2,
-                      children:[
-                        {
-                          id:'sonia_c', name:'Sonia Chug', sp:'Bittu Chug', gen:3,
-                          children:[
-                            { id:'karan_chug', name:'Karan Chug', sp:'Sharon Chug', gen:4 },
-                            { id:'saiba', name:'Saiba Chug', gen:4 }
-                          ]
-                        },
-                        {
-                          id:'sanju', name:'Sanju Basoor', sp:'Sonia Basoor', gen:3,
-                          children:[
-                            {
-                              id:'saman', name:'Saman Basoor', sp:'Vanshika', gen:4,
+                                { id:'anaisha', name:'Anaisha Garg', gen:9 },
+                                { id:'shanaya', name:'Shanaya Garg', gen:9 }
+                              ]},
+                            { id:'sarab_n', name:'Sarab Narang', sp:'Sunaina Narang', gen:8,
                               children:[
-                                { id:'varya', name:'Varya Basoor', gen:5 }
-                              ]
-                            },
-                            { id:'sanraj', name:'Sanraj Basoor', gen:4 }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'triloch', name:'Sr. Trilochan Singh', sp:'Minna Basoor', sp_dec:true, gen:2,
-                      children:[
-                        {
-                          id:'chinky', name:'Chinky Basoor', sp:'Sona Basoor', gen:3,
+                                { id:'ajooni', name:'Ajooni Narang', gen:9 },
+                                { id:'viraj', name:'Viraj Narang', gen:9 }
+                              ]}
+                          ]},
+                        { id:'honey', name:'Honey Malhotra', sp:'Amit Kaur', gen:7,
                           children:[
-                            { id:'guneet', name:'Gunnet Kaur Basoor', gen:4 },
-                            { id:'jivraj', name:'Jivraj Singh Basoor', gen:4 }
-                          ]
-                        },
-                        {
-                          id:'rasna', name:'Rasna Bedi', sp:'Happy Bedi', gen:3,
-                          children:[
-                            { id:'mahima', name:'Mahima Bedi', gen:4 },
-                            { id:'jia', name:'Jia Bedi', gen:4 }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'harjeet', name:'Sr. Harjeet Singh', sp:'Rupinder Kaur', dec:true, gen:2,
-                      children:[
-                        {
-                          id:'resham', name:'Resham Basoor', sp:'Soni Basoor', gen:3,
-                          children:[
-                            { id:'trishman', name:'Trishman Basoor', gen:4 },
-                            { id:'kiaana', name:'Kiaana Basoor', gen:4 }
-                          ]
-                        },
-                        { id:'rishu', name:'Rishu Basoor', gen:3 }
-                      ]
-                    },
-                    {
-                      id:'daljeet', name:'Sr. Daljeet Singh',
-                      sp_left:'Neetu Basoor', sp_left_dec:true,
-                      sp:'Ritu Basoor',
-                      gen:2,
-                      children:[
-                        { id:'abhijeet', name:'Abhijeet Basoor', sp:'Meena', gen:3 },
-                        {
-                          id:'prabhjeet', name:'Prabhjeet Basoor', sp:'Binny Basoor', gen:3,
-                          children:[
-                            { id:'noor', name:'Harnoor Kaur Basoor', gen:4 },
-                            { id:'nirver', name:'Nirver Basoor', gen:4 }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'ranjeet', name:'Sr. Ranjeet Singh', sp:'Dolly Basoor', gen:2,
-                      children:[
-                        {
-                          id:'gaurav', name:'Gaurav Basoor', sp:'Namrata Basoor', gen:3,
-                          children:[
-                            { id:'kaira', name:'Kaira Basoor', gen:4 },
-                            { id:'meera', name:'Meera Basoor', gen:4 }
-                          ]
-                        },
-                        {
-                          id:'gaytri', name:'Gaytri Bhargav', sp:'Vaibhav Bhargav', gen:3,
-                          children:[
-                            { id:'shauraya', name:'Shaurya Bhargav', gen:4 },
-                            { id:'ruveer', name:'Ruveer Bhargav', gen:4 }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'pritam', name:'Pritam Kaur', sp:'Davinder Singh Malhotra', sp_dec:true, gen:2,
-                      children:[
-                        { id:'neeta', name:'Neena Narang', sp:'Satinder Narang', gen:3,
-                          children:[
-                            { id:'tanya', name:'Tanya Garg', sp:'Gaurav Garg', gen:4,
+                            { id:'as_jr', name:'Karan Malhotra', sp:'Sugeet Malhotra', gen:8,
+                              children:[ { id:'naira', name:'Naira Malhotra', gen:9 } ] },
+                            { id:'sarab_m', name:'Sarab Sachdeva', sp:'Vishal Sachdeva', gen:8,
                               children:[
-                                { id:'anaisha', name:'Anaisha Garg', gen:5 },
-                                { id:'shanaya', name:'Shanaya Garg', gen:5 }
-                              ]
-                            },
-                            { id:'sarab_n', name:'Sarab Narang', sp:'Sunaina Narang', gen:4,
-                              children:[
-                                { id:'ajooni', name:'Ajooni Narang', gen:5 },
-                                { id:'viraj', name:'Viraj Narang', gen:5 }
-                              ]
-                            }
-                          ]
-                        },
-                        { id:'honey', name:'Honey Malhotra', sp:'Amit Kaur', gen:3,
+                                { id:'seher', name:'Seher Sachdeva', gen:9 },
+                                { id:'vedant', name:'Vedant Sachdeva', gen:9 }
+                              ]}
+                          ]},
+                        { id:'sunny', name:'Sunny Malhotra', sp:'Sonia Malhotra', gen:7,
                           children:[
-                            { id:'as_jr', name:'Karan Malhotra', sp:'Sugeet', gen:4,
-                              children:[
-                                { id:'naira', name:'Naira Malhotra', gen:5 }
-                              ]
-                            },
-                            { id:'sunny', name:'Sunny Malhotra', sp:'Sonia Malhotra', gen:4,
-                              children:[
-                                { id:'mannat', name:'Mannat Malhotra', sp:'Gagan Singh', gen:5 },
-                                { id:'simran_m', name:'Simran Malhotra', sp:'Juliette', gen:5 }
-                              ]
-                            }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'moni', name:'Mohini Bhan', sp:'Jaswant Singh Bhan', sp_dec:true, dec:true, gen:2,
+                            { id:'mannat', name:'Mannat Malhotra', sp:'Gagan Singh', gen:8 },
+                            { id:'simran_m', name:'Simran Malhotra', sp:'Juliette', gen:8 }
+                          ]}
+                      ]},
+                    { id:'moni', name:'Mohini Bhan', sp:'Jaswant Singh Bhan', sp_dec:true, dec:true, gen:6,
                       children:[
-                        {
-                          id:'dimpy', name:'Dimpy Bhan', sp:'Bubbie Bhan', gen:3,
+                        { id:'dimpy', name:'Dimpy Bhan', sp:'Bubbie Bhan', gen:7,
                           children:[
-                            {
-                              id:'kanika', name:'Kanika Bhan Sachdeva', sp:'Gaurav Sachdeva', gen:4,
+                            { id:'kanika', name:'Kanika Bhan Sachdeva', sp:'Gaurav Sachdeva', gen:8,
                               children:[
-                                { id:'miraya', name:'Miraya Sachdeva', gen:5 },
-                                { id:'samaira', name:'Samaira Sachdeva', gen:5 }
-                              ]
-                            },
-                            { id:'manjot', name:'Manjot Ahluwalia', sp:'Jasdeep Singh Ahluwalia', gen:4 },
-                            { id:'suryansh', name:'Suryansh', gen:4 }
-                          ]
-                        },
-                        {
-                          id:'renu', name:'Renu Uppal', sp:'Tony Uppal', gen:3,
+                                { id:'miraya', name:'Miraya Sachdeva', gen:9 },
+                                { id:'samaira', name:'Samaira Sachdeva', gen:9 }
+                              ]},
+                            { id:'manjot', name:'Manjot Ahluwalia', sp:'Jasdeep Singh Ahluwalia', gen:8 },
+                            { id:'suryansh', name:'Suryansh', gen:8 }
+                          ]},
+                        { id:'renu', name:'Renu Uppal', sp:'Tony Uppal', gen:7,
                           children:[
-                            {
-                              id:'shayana', name:'Shayana Reddy', sp:'Yathin Reddy', gen:4,
+                            { id:'shayana', name:'Shayana Reddy', sp:'Yathin Reddy', gen:8,
                               children:[
-                                { id:'aanya', name:'Aanya Reddy', gen:5 },
-                                { id:'rayaan', name:'Rayaan Reddy', gen:5 }
-                              ]
-                            },
-                            {
-                              id:'shitija', name:'Shitija Uppal (Nahta)', gen:4,
-                              children:[
-                                { id:'kabir', name:'Kabir Nahta', gen:5 }
-                              ]
-                            }
-                          ]
-                        },
-                        {
-                          id:'menu', name:'Veenita Bhan (Menu)', gen:3,
+                                { id:'aanya', name:'Aanya Reddy', gen:9 },
+                                { id:'rayaan', name:'Rayaan Reddy', gen:9 }
+                              ]},
+                            { id:'shitija', name:'Shitija Uppal (Nahta)', gen:8,
+                              children:[ { id:'kabir', name:'Kabir Nahta', gen:9 } ] }
+                          ]},
+                        { id:'menu', name:'Veenita Bhan (Menu)', gen:7,
                           children:[
-                            { id:'wafa', name:'Wafa Safi', gen:4 },
-                            { id:'rashi', name:'Rashid Safi', gen:4 },
-                            { id:'sanad', name:'Sanad Safi', gen:4 }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'rani', name:'Rani Bedi', sp:'Harinder Singh Bedi', gen:2,
+                            { id:'wafa', name:'Wafa Safi', gen:8 },
+                            { id:'rashi', name:'Rashid Safi', gen:8 },
+                            { id:'sanad', name:'Sanad Safi', gen:8 }
+                          ]}
+                      ]},
+                    { id:'rani', name:'Rani Bedi', sp:'Harinder Singh Bedi', gen:6,
                       children:[
-                        { id:'joy', name:'Joy Bedi', gen:3, dec:true },
-                        { id:'rahul', name:'Ravinder Bedi', sp:'Ruby Bedi', gen:3,
+                        { id:'joy', name:'Joy Bedi', gen:7, dec:true },
+                        { id:'rahul', name:'Ravinder Bedi', sp:'Ruby Bedi', gen:7,
                           children:[
-                            { id:'rabjot', name:'Rabjot Singh Bedi', gen:4 },
-                            { id:'jeffraaj', name:'Jeffraaj Singh Bedi', gen:4 }
-                          ]
-                        },
-                        { id:'preeti', name:'Gurpreet Kaur Chawla (Preeti)', sp:'Harvinder Singh Chawla', gen:3,
+                            { id:'rabjot', name:'Rabjot Singh Bedi', gen:8 },
+                            { id:'jeffraaj', name:'Jeffraaj Singh Bedi', gen:8 }
+                          ]},
+                        { id:'preeti', name:'Gurpreet Kaur Chawla (Preeti)', sp:'Harvinder Singh Chawla', gen:7,
                           children:[
-                            { id:'gagandeep', name:'Gagandeep Singh Chawla', sp:'Khushneet Kaur Chawla', gen:4,
-                              children:[
-                                { id:'nirvair', name:'Nirvair Singh Chawla', gen:5 }
-                              ]
-                            },
-                            { id:'karan_chawla', name:'Karan Singh Chawla', gen:4, dec:true }
-                          ]
-                        }
-                      ]
-                    },
-                    {
-                      id:'baby', name:'Baby Bahal', sp:'Rupinder Singh Bahal', sp_dec:true, gen:2,
+                            { id:'gagandeep', name:'Gagandeep Singh Chawla', sp:'Khushneet Kaur Chawla', gen:8,
+                              children:[ { id:'nirvair', name:'Nirvair Singh Chawla', gen:9 } ] },
+                            { id:'karan_chawla', name:'Karan Singh Chawla', gen:8, dec:true }
+                          ]}
+                      ]},
+                    { id:'baby', name:'Baby Bahal', sp:'Rupinder Singh Bahal', sp_dec:true, gen:6,
                       children:[
-                        { id:'sapna', name:'Sapna Sood', sp:'Bunty Sood', gen:3 },
-                        { id:'bunty_bahal', name:'Bunty Bahal', gen:3, dec:true }
-                      ]
-                    },
-                    {
-                      id:'babli', name:'Babli Arora',
-                      sp_left:'Savita Arora',
-                      sp:'Babloo Arora', gen:2,
+                        { id:'sapna', name:'Sapna Sood', sp:'Bunty Sood', gen:7 },
+                        { id:'bunty_bahal', name:'Bunty Bahal', gen:7, dec:true }
+                      ]},
+                    { id:'babli', name:'Babli Arora', sp:'Babloo Arora', sp2:'Savita Arora', gen:6,
                       children:[
-                        { id:'ruchika', name:'Ruchika', gen:3, dec:true },
-                        { id:'ritika', name:'Ritika', gen:3, dec:true },
-                        { id:'raunak', name:'Raunak', gen:3, dec:true },
-                        {
-                          id:'ridhima', name:'Ridhima Vig', sp:'Rimpy Vig', gen:3,
-                          children:[
-                            { id:'aman', name:'Aman Vig', gen:4 }
-                          ]
-                        },
-                        { id:'sahib', name:'Sahib Arora', sp:'Simran Arora', gen:3 }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
-};
+                        { id:'ruchika', name:'Ruchika', gen:7, dec:true },
+                        { id:'ritika', name:'Ritika', gen:7, dec:true },
+                        { id:'raunak', name:'Raunak', gen:7, dec:true },
+                        { id:'ridhima', name:'Ridhima Vig', sp:'Rimpy Vig', gen:7,
+                          children:[ { id:'aman', name:'Aman Vig', gen:8 } ] },
+                        { id:'sahib', name:'Sahib Arora', sp:'Simran Arora', gen:7 }
+                      ]}
+                  ]}
+              ]}
+          ]}
+      ]}
+]};
 
-/* ─────────────────────────────────────────
-   LAYOUT
-───────────────────────────────────────── */
-function coupleW(n) {
-  let w = NW;
-  if (n.sp) w += GAP + NW;
-  if (n.sp_left) w += GAP + NW;
-  return w;
+/* ── Layout: LEFT-TO-RIGHT
+   x = generation (depth), y = position among siblings
+   NW = box width, NH = box height
+   XGAP = horizontal gap between generations
+   YGAP = vertical gap between siblings
+────────────────────────────────────────── */
+const NW = 130, NH = 48, XGAP = 28, YGAP = 8;
+
+/* How many leaf rows does this subtree need? */
+function leafCount(n) {
+  if (!n.children || !n.children.length) return 1;
+  return n.children.reduce((s,c) => s + leafCount(c), 0);
 }
 
-// X offset of the person card within its couple block
-function personOff(n) {
-  return n.sp_left ? (NW + GAP) : 0;
-}
-
-function subtreeW(n) {
-  if (!n.children || !n.children.length) return coupleW(n);
-  const childW = n.children.reduce((s, c) => s + subtreeW(c), 0)
-               + (n.children.length - 1) * HGAP;
-  return Math.max(coupleW(n), childW);
-}
-
-function layout(n, x, y) {
-  const sw = subtreeW(n);
-  const cw = coupleW(n);
-  n._cx = x + sw / 2 - cw / 2;   // left edge of couple block
-  n._y  = y;
-  n._px = n._cx + personOff(n);  // left edge of person card
+/* Assign _x (col), _y (top of row in px), _h (height in px) */
+function layout(n, depth, yOffset) {
+  n._x = depth * (NW + XGAP);
+  const lc = leafCount(n);
+  n._h = lc * (NH + YGAP) - YGAP;
+  n._y = yOffset + (n._h - NH) / 2;   // vertically centre in its allocated height
 
   if (!n.children || !n.children.length) return;
-  const childW = n.children.reduce((s, c) => s + subtreeW(c), 0)
-               + (n.children.length - 1) * HGAP;
-  let lx = x + sw / 2 - childW / 2;
+  let cy = yOffset;
   for (const c of n.children) {
-    layout(c, lx, y + NH + VGAP);
-    lx += subtreeW(c) + HGAP;
+    const ch = leafCount(c) * (NH + YGAP) - YGAP;
+    layout(c, depth + 1, cy);
+    cy += ch + YGAP;
   }
 }
 
-layout(tree, 30, 30);
+layout(tree, 0, 10);
 
-/* ─────────────────────────────────────────
-   RENDER NODES
-───────────────────────────────────────── */
-const scene = document.getElementById('scene');
-const svgEl = document.getElementById('svglines');
-
-function hyphen() {
-  const d = document.createElement('div');
-  d.className = 'sp-hyphen';
-  d.textContent = '—';
-  return d;
+/* bounds */
+let maxX = 0, maxY = 0;
+function bnd(n) {
+  maxX = Math.max(maxX, n._x + NW);
+  maxY = Math.max(maxY, n._y + NH);
+  n.children && n.children.forEach(bnd);
 }
+bnd(tree);
 
-function makeEl(n) {
-  const wrap = document.createElement('div');
-  wrap.className = 'couple';
-  wrap.style.left = n._cx + 'px';
-  wrap.style.top  = n._y + 'px';
+const scene  = document.getElementById('scene');
+const svgEl  = document.getElementById('svglines');
+svgEl.setAttribute('width',  maxX + 40);
+svgEl.setAttribute('height', maxY + 40);
+scene.style.width  = (maxX + 40) + 'px';
+scene.style.height = (maxY + 40) + 'px';
 
-  // left spouse
-  if (n.sp_left) {
-    const el = document.createElement('div');
-    el.className = 'node spouse';
-    el.innerHTML = `<div class="nm">${n.sp_left}</div>`;
-    if (n.sp_left_dec) el.innerHTML += `<div class="dec-tag">Deceased</div>`;
-    wrap.appendChild(el);
-    wrap.appendChild(hyphen());
+/* ── Render nodes ── */
+function makeCard(n) {
+  const div = document.createElement('div');
+  div.className = `node-card g${n.gen}`;
+  div.style.left   = n._x + 'px';
+  div.style.top    = n._y + 'px';
+  div.style.width  = NW + 'px';
+  div.style.minHeight = NH + 'px';
+
+  /* Name */
+  const nm = document.createElement('div');
+  nm.className = 'nm';
+  nm.textContent = n.name;
+  if (n.dec) nm.style.color = '#cc0000';
+  div.appendChild(nm);
+
+  if (n.dec) {
+    const dt = document.createElement('div');
+    dt.className = 'dec-tag';
+    dt.textContent = 'Deceased';
+    div.appendChild(dt);
   }
 
-  // main person
-  const p = document.createElement('div');
-  p.className = `node g${n.gen} person`;
-  p.innerHTML = `<div class="nm">${n.name}</div>`;
-  if (n.dec) p.innerHTML += `<div class="dec-tag">Deceased</div>`;
-  wrap.appendChild(p);
+  /* Spouses */
+  const spouses = [];
+  if (n.sp2)  spouses.push({name: n.sp2,  dec: false});
+  if (n.sp)   spouses.push({name: n.sp,   dec: !!n.sp_dec});
 
-  // right spouse
-  if (n.sp) {
-    wrap.appendChild(hyphen());
-    const el = document.createElement('div');
-    el.className = 'node spouse';
-    el.innerHTML = `<div class="nm">${n.sp}</div>`;
-    if (n.sp_dec) el.innerHTML += `<div class="dec-tag">Deceased</div>`;
-    wrap.appendChild(el);
+  for (const sp of spouses) {
+    const s = document.createElement('div');
+    s.className = 'sp';
+    s.textContent = '+ ' + sp.name;
+    if (sp.dec) s.style.color = '#cc0000';
+    div.appendChild(s);
   }
 
-  scene.appendChild(wrap);
+  scene.appendChild(div);
+  n.children && n.children.forEach(makeCard);
 }
+makeCard(tree);
 
-/* ─────────────────────────────────────────
-   RENDER LINES
-───────────────────────────────────────── */
+/* ── Render lines ── */
 function drawLines(n) {
   if (!n.children || !n.children.length) return;
-  // line comes from bottom-centre of the PERSON card only
-  const px  = n._px + NW / 2;
-  const py  = n._y + NH;
-  const mid = py + VGAP / 2;
 
+  /* Parent connector point: right-centre of this card */
+  const px = n._x + NW;
+  const py = n._y + NH / 2;
+
+  /* Midpoint between parent right edge and children left edge */
+  const midX = px + XGAP / 2;
+
+  /* Children top and bottom centres */
+  const firstCY = n.children[0]._y + NH / 2;
+  const lastCY  = n.children[n.children.length - 1]._y + NH / 2;
+
+  /* Horizontal stub right from parent */
+  addLine(px, py, midX, py);
+
+  /* Vertical bar connecting all children */
+  addLine(midX, firstCY, midX, lastCY);
+
+  /* Horizontal stubs left into each child */
   for (const c of n.children) {
-    const cx = c._px + NW / 2;
-    const cy = c._y;
-    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    path.setAttribute('class', 'connector');
-    path.setAttribute('d', `M${px},${py} L${px},${mid} L${cx},${mid} L${cx},${cy}`);
-    svgEl.appendChild(path);
+    const cy = c._y + NH / 2;
+    addLine(midX, cy, c._x, cy);
     drawLines(c);
   }
 }
 
-function traverse(n, fn) {
-  fn(n);
-  if (n.children) n.children.forEach(c => traverse(c, fn));
+function addLine(x1, y1, x2, y2) {
+  const path = document.createElementNS('http://www.w3.org/2000/svg','line');
+  path.setAttribute('class','connector');
+  path.setAttribute('x1', x1); path.setAttribute('y1', y1);
+  path.setAttribute('x2', x2); path.setAttribute('y2', y2);
+  svgEl.appendChild(path);
 }
 
-traverse(tree, makeEl);
 drawLines(tree);
 
-// Size the SVG to cover all content
-let maxX = 0, maxY = 0;
-traverse(tree, n => {
-  maxX = Math.max(maxX, n._cx + coupleW(n) + 40);
-  maxY = Math.max(maxY, n._y + NH + 40);
-});
-svgEl.setAttribute('width', maxX);
-svgEl.setAttribute('height', maxY);
-scene.style.width = maxX + 'px';
-scene.style.height = maxY + 'px';
-
-/* ─────────────────────────────────────────
-   PAN & ZOOM
-───────────────────────────────────────── */
+/* ── Pan & Zoom ── */
 const vp = document.getElementById('viewport');
-let scale = 0.6, tx = 0, ty = 20;
+let scale = 0.55, tx = 20, ty = 20;
 
 function applyT() {
   scene.style.transform = `translate(${tx}px,${ty}px) scale(${scale})`;
 }
 
-// Centre the root on load
 (function init() {
-  const rootCX = tree._px + NW / 2;
-  tx = vp.clientWidth / 2 - rootCX * scale;
-  applyT();
+  tx = 20; ty = 20; applyT();
 })();
 
-/* — Mouse drag — */
-let drag = false, ox, oy, otx, oty;
-vp.addEventListener('mousedown', e => {
-  drag = true; vp.classList.add('dragging');
-  ox = e.clientX; oy = e.clientY; otx = tx; oty = ty;
-});
-window.addEventListener('mousemove', e => {
-  if (!drag) return;
-  tx = otx + (e.clientX - ox);
-  ty = oty + (e.clientY - oy);
-  applyT();
-});
-window.addEventListener('mouseup', () => { drag = false; vp.classList.remove('dragging'); });
-
-/* — Scroll zoom (desktop) — */
-vp.addEventListener('wheel', e => {
+let drag=false, ox,oy,otx,oty;
+vp.addEventListener('mousedown',e=>{drag=true;vp.classList.add('dragging');ox=e.clientX;oy=e.clientY;otx=tx;oty=ty});
+window.addEventListener('mousemove',e=>{if(!drag)return;tx=otx+(e.clientX-ox);ty=oty+(e.clientY-oy);applyT()});
+window.addEventListener('mouseup',()=>{drag=false;vp.classList.remove('dragging')});
+vp.addEventListener('wheel',e=>{
   e.preventDefault();
-  const rect = vp.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
-  const factor = e.deltaY < 0 ? 1.12 : 0.9;
-  const ns = Math.min(3, Math.max(0.1, scale * factor));
-  tx = mx - (mx - tx) * (ns / scale);
-  ty = my - (my - ty) * (ns / scale);
-  scale = ns;
-  applyT();
-}, { passive: false });
+  const rect=vp.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const ns=Math.min(3,Math.max(0.1,scale*(e.deltaY<0?1.12:0.9)));
+  tx=mx-(mx-tx)*(ns/scale); ty=my-(my-ty)*(ns/scale); scale=ns; applyT();
+},{passive:false});
 
-/* — Touch: single-finger pan + two-finger pinch zoom — */
-let t1 = null, t2 = null, pinchDist0, pinchScale0, pinchTx0, pinchTy0, pinchMx, pinchMy;
-let panTx0, panTy0, panX0, panY0;
-
-vp.addEventListener('touchstart', e => {
+let t1=null,t2=null,pd0,ps0,ptx0,pty0,pmx,pmy;
+vp.addEventListener('touchstart',e=>{
   e.preventDefault();
-  if (e.touches.length === 1) {
-    t1 = e.touches[0];
-    t2 = null;
-    panX0 = t1.clientX; panY0 = t1.clientY;
-    panTx0 = tx; panTy0 = ty;
-  } else if (e.touches.length >= 2) {
-    t1 = e.touches[0]; t2 = e.touches[1];
-    pinchDist0 = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
-    pinchScale0 = scale;
-    pinchTx0 = tx; pinchTy0 = ty;
-    const rect = vp.getBoundingClientRect();
-    pinchMx = (t1.clientX + t2.clientX) / 2 - rect.left;
-    pinchMy = (t1.clientY + t2.clientY) / 2 - rect.top;
+  if(e.touches.length===1){t1=e.touches[0];t2=null;ox=t1.clientX;oy=t1.clientY;otx=tx;oty=ty}
+  else if(e.touches.length>=2){
+    t1=e.touches[0];t2=e.touches[1];
+    pd0=Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);
+    ps0=scale;ptx0=tx;pty0=ty;
+    const r=vp.getBoundingClientRect();
+    pmx=(t1.clientX+t2.clientX)/2-r.left;pmy=(t1.clientY+t2.clientY)/2-r.top;
   }
-}, { passive: false });
-
-vp.addEventListener('touchmove', e => {
+},{passive:false});
+vp.addEventListener('touchmove',e=>{
   e.preventDefault();
-  if (e.touches.length === 1 && !t2) {
-    const dx = e.touches[0].clientX - panX0;
-    const dy = e.touches[0].clientY - panY0;
-    tx = panTx0 + dx;
-    ty = panTy0 + dy;
-    applyT();
-  } else if (e.touches.length >= 2) {
-    const a = e.touches[0], b = e.touches[1];
-    const dist = Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
-    const ns = Math.min(3, Math.max(0.1, pinchScale0 * (dist / pinchDist0)));
-    tx = pinchMx - (pinchMx - pinchTx0) * (ns / pinchScale0);
-    ty = pinchMy - (pinchMy - pinchTy0) * (ns / pinchScale0);
-    scale = ns;
-    applyT();
+  if(e.touches.length===1&&!t2){
+    tx=otx+(e.touches[0].clientX-ox);ty=oty+(e.touches[0].clientY-oy);applyT();
+  } else if(e.touches.length>=2){
+    const a=e.touches[0],b=e.touches[1];
+    const dist=Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);
+    const ns=Math.min(3,Math.max(0.1,ps0*(dist/pd0)));
+    tx=pmx-(pmx-ptx0)*(ns/ps0);ty=pmy-(pmy-pty0)*(ns/ps0);scale=ns;applyT();
   }
-}, { passive: false });
+},{passive:false});
+vp.addEventListener('touchend',e=>{
+  if(e.touches.length<2)t2=null;
+  if(e.touches.length===1){ox=e.touches[0].clientX;oy=e.touches[0].clientY;otx=tx;oty=ty;}
+},{passive:false});
 
-vp.addEventListener('touchend', e => {
-  if (e.touches.length === 0) { t1 = null; t2 = null; }
-  else if (e.touches.length === 1) {
-    t2 = null;
-    panX0 = e.touches[0].clientX; panY0 = e.touches[0].clientY;
-    panTx0 = tx; panTy0 = ty;
-  }
-}, { passive: false });
-
-/* — Button helpers — */
-function zoomBy(f) {
-  const cx = vp.clientWidth / 2, cy = vp.clientHeight / 2;
-  const ns = Math.min(3, Math.max(0.1, scale * f));
-  tx = cx - (cx - tx) * (ns / scale);
-  ty = cy - (cy - ty) * (ns / scale);
-  scale = ns;
-  applyT();
+function zoomBy(f){
+  const cx=vp.clientWidth/2,cy=vp.clientHeight/2;
+  const ns=Math.min(3,Math.max(0.1,scale*f));
+  tx=cx-(cx-tx)*(ns/scale);ty=cy-(cy-ty)*(ns/scale);scale=ns;applyT();
 }
-
-function resetView() {
-  scale = 0.6; ty = 20;
-  const rootCX = tree._px + NW / 2;
-  tx = vp.clientWidth / 2 - rootCX * scale;
-  applyT();
-}
+function resetView(){scale=0.55;tx=20;ty=20;applyT();}
 </script>
 </body>
 </html>
-```
