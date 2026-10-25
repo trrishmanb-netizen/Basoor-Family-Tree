@@ -1,0 +1,1090 @@
+{
+  "source": "https://github.com/trrishmanb-netizen/Basoor-Family-Tree/blob/main/index.html",
+  "people": [
+    {
+      "id": "laik",
+      "name": "Ch. Laik Singh",
+      "gen": 1,
+      "parentId": null,
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "swai",
+      "name": "Ch. Swai Singh",
+      "gen": 2,
+      "parentId": "laik",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "rattan",
+      "name": "Ch. Rattan Singh",
+      "gen": 3,
+      "parentId": "swai",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "suba",
+      "name": "Ch. Suba Singh",
+      "gen": 4,
+      "parentId": "rattan",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "jwala",
+      "name": "Ch. Jwala Singh",
+      "gen": 4,
+      "parentId": "rattan",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "sham",
+      "name": "Ch. Sham Singh",
+      "gen": 4,
+      "parentId": "rattan",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "amir",
+      "name": "Ch. Amir Singh",
+      "gen": 4,
+      "parentId": "rattan",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "ram",
+      "name": "Sr. Ram Singh Basoor",
+      "gen": 5,
+      "parentId": "amir",
+      "deceased": true,
+      "spouses": [
+        {
+          "name": "Gobind Kaur",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "joginder",
+      "name": "Sr. Joginder Singh Basoor",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": true,
+      "spouses": [
+        {
+          "name": "Narinder Kaur Basoor",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "sweety",
+      "name": "Sweety Khurrana",
+      "gen": 7,
+      "parentId": "joginder",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Gurpreet Singh Khurrana",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "karan",
+      "name": "Karan Khurrana",
+      "gen": 8,
+      "parentId": "sweety",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Puneet Kaur Khurrana",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "kirti",
+      "name": "Kirti Chhabra (Gudia)",
+      "gen": 8,
+      "parentId": "sweety",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Unknown",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "hanna",
+      "name": "Hanna Bajaj",
+      "gen": 7,
+      "parentId": "joginder",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Tony Bajaj",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "jitin",
+      "name": "Jitin Bajaj",
+      "gen": 8,
+      "parentId": "hanna",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Rashleen Kaur",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "jitin_son",
+      "name": "Sanraj Bajaj",
+      "gen": 9,
+      "parentId": "jitin",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "reena",
+      "name": "Reena Bajaj",
+      "gen": 8,
+      "parentId": "hanna",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "lovely",
+      "name": "Lovely Basoor",
+      "gen": 7,
+      "parentId": "joginder",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "bunny",
+      "name": "Bunny Basoor",
+      "gen": 7,
+      "parentId": "joginder",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Pinky Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "parv",
+      "name": "Parv Basoor",
+      "gen": 8,
+      "parentId": "bunny",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "avtar",
+      "name": "Sr. Avtar Singh Basoor",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": true,
+      "spouses": [
+        {
+          "name": "Sudarshan Kaur",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "sonia_c",
+      "name": "Sonia Chug",
+      "gen": 7,
+      "parentId": "avtar",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Bittu Chug",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "karan_chug",
+      "name": "Karan Chug",
+      "gen": 8,
+      "parentId": "sonia_c",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Sharon Chug",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "saiba",
+      "name": "Saiba Chug",
+      "gen": 8,
+      "parentId": "sonia_c",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sanju",
+      "name": "Sanju Basoor",
+      "gen": 7,
+      "parentId": "avtar",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Sonia Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "saman",
+      "name": "Saman Basoor",
+      "gen": 8,
+      "parentId": "sanju",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Vanshika",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "varya",
+      "name": "Varya Basoor",
+      "gen": 9,
+      "parentId": "saman",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sanraj",
+      "name": "Sanraj Basoor",
+      "gen": 8,
+      "parentId": "sanju",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "triloch",
+      "name": "Sr. Trilochan Singh",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Minna Basoor",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "chinky",
+      "name": "Chinky Basoor",
+      "gen": 7,
+      "parentId": "triloch",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Sona Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "guneet",
+      "name": "Gunnet Kaur Basoor",
+      "gen": 8,
+      "parentId": "chinky",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "jivraj",
+      "name": "Jivraj Singh Basoor",
+      "gen": 8,
+      "parentId": "chinky",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "rasna",
+      "name": "Rasna Bedi",
+      "gen": 7,
+      "parentId": "triloch",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Happy Bedi",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "mahima",
+      "name": "Mahima Bedi",
+      "gen": 8,
+      "parentId": "rasna",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "jia",
+      "name": "Jia Bedi",
+      "gen": 8,
+      "parentId": "rasna",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "harjeet",
+      "name": "Sr. Harjeet Singh",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": true,
+      "spouses": [
+        {
+          "name": "Rupinder Kaur",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "resham",
+      "name": "Resham Basoor",
+      "gen": 7,
+      "parentId": "harjeet",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Soni Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "trishman",
+      "name": "Trrishman Singh Basoor",
+      "gen": 8,
+      "parentId": "resham",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "kiaana",
+      "name": "Kiaana Basoor",
+      "gen": 8,
+      "parentId": "resham",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "rishu",
+      "name": "Rishu Basoor",
+      "gen": 7,
+      "parentId": "harjeet",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "daljeet",
+      "name": "Sr. Daljeet Singh",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Ritu Basoor",
+          "deceased": false
+        },
+        {
+          "name": "Neetu Basoor",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "abhijeet",
+      "name": "Abhijeet Basoor",
+      "gen": 7,
+      "parentId": "daljeet",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Meena",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "prabhjeet",
+      "name": "Prabhjeet Basoor",
+      "gen": 7,
+      "parentId": "daljeet",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Binny Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "noor",
+      "name": "Harnoor Kaur Basoor",
+      "gen": 8,
+      "parentId": "prabhjeet",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "nirver",
+      "name": "Nirver Basoor",
+      "gen": 8,
+      "parentId": "prabhjeet",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "ranjeet",
+      "name": "Sr. Ranjeet Singh",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Dolly Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "gaurav",
+      "name": "Gaurav Basoor",
+      "gen": 7,
+      "parentId": "ranjeet",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Namrata Basoor",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "kaira",
+      "name": "Kaira Basoor",
+      "gen": 8,
+      "parentId": "gaurav",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "meera",
+      "name": "Meera Basoor",
+      "gen": 8,
+      "parentId": "gaurav",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "gaytri",
+      "name": "Gaytri Bhargav",
+      "gen": 7,
+      "parentId": "ranjeet",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Vaibhav Bhargav",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "shauraya",
+      "name": "Shaurya Bhargav",
+      "gen": 8,
+      "parentId": "gaytri",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "ruveer",
+      "name": "Ruveer Bhargav",
+      "gen": 8,
+      "parentId": "gaytri",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "pritam",
+      "name": "Pritam Kaur",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Davinder Singh Malhotra",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "neeta",
+      "name": "Neena Narang",
+      "gen": 7,
+      "parentId": "pritam",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Satinder Narang",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "tanya",
+      "name": "Tanya Garg",
+      "gen": 8,
+      "parentId": "neeta",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Gaurav Garg",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "anaisha",
+      "name": "Anaisha Garg",
+      "gen": 9,
+      "parentId": "tanya",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "shanaya",
+      "name": "Shanaya Garg",
+      "gen": 9,
+      "parentId": "tanya",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sarab_n",
+      "name": "Sarab Narang",
+      "gen": 8,
+      "parentId": "neeta",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Sunaina Narang",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "ajooni",
+      "name": "Ajooni Narang",
+      "gen": 9,
+      "parentId": "sarab_n",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "viraj",
+      "name": "Viraj Narang",
+      "gen": 9,
+      "parentId": "sarab_n",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "honey",
+      "name": "Honey Malhotra",
+      "gen": 7,
+      "parentId": "pritam",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Amit Kaur",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "as_jr",
+      "name": "Karan Malhotra",
+      "gen": 8,
+      "parentId": "honey",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Sugeet Malhotra",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "naira",
+      "name": "Naira Malhotra",
+      "gen": 9,
+      "parentId": "as_jr",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sarab_m",
+      "name": "Sarab Sachdeva",
+      "gen": 8,
+      "parentId": "honey",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Vishal Sachdeva",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "seher",
+      "name": "Seher Sachdeva",
+      "gen": 9,
+      "parentId": "sarab_m",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "vedant",
+      "name": "Vedant Sachdeva",
+      "gen": 9,
+      "parentId": "sarab_m",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sunny",
+      "name": "Sunny Malhotra",
+      "gen": 7,
+      "parentId": "pritam",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Sonia Malhotra",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "mannat",
+      "name": "Mannat Malhotra",
+      "gen": 8,
+      "parentId": "sunny",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Gagan Singh",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "simran_m",
+      "name": "Simran Malhotra",
+      "gen": 8,
+      "parentId": "sunny",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Juliette",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "moni",
+      "name": "Mohini Bhan",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": true,
+      "spouses": [
+        {
+          "name": "Jaswant Singh Bhan",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "dimpy",
+      "name": "Dimpy Bhan",
+      "gen": 7,
+      "parentId": "moni",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Bubbie Bhan",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "kanika",
+      "name": "Kanika Bhan Sachdeva",
+      "gen": 8,
+      "parentId": "dimpy",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Gaurav Sachdeva",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "miraya",
+      "name": "Miraya Sachdeva",
+      "gen": 9,
+      "parentId": "kanika",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "samaira",
+      "name": "Samaira Sachdeva",
+      "gen": 9,
+      "parentId": "kanika",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "manjot",
+      "name": "Manjot Ahluwalia",
+      "gen": 8,
+      "parentId": "dimpy",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Jasdeep Singh Ahluwalia",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "suryansh",
+      "name": "Suryansh",
+      "gen": 8,
+      "parentId": "dimpy",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "renu",
+      "name": "Renu Uppal",
+      "gen": 7,
+      "parentId": "moni",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Tony Uppal",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "shayana",
+      "name": "Shayana Reddy",
+      "gen": 8,
+      "parentId": "renu",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Yathin Reddy",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "aanya",
+      "name": "Aanya Reddy",
+      "gen": 9,
+      "parentId": "shayana",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "rayaan",
+      "name": "Rayaan Reddy",
+      "gen": 9,
+      "parentId": "shayana",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "shitija",
+      "name": "Shitija Uppal (Nahta)",
+      "gen": 8,
+      "parentId": "renu",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "kabir",
+      "name": "Kabir Nahta",
+      "gen": 9,
+      "parentId": "shitija",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "menu",
+      "name": "Veenita Bhan (Menu)",
+      "gen": 7,
+      "parentId": "moni",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "wafa",
+      "name": "Wafa Safi",
+      "gen": 8,
+      "parentId": "menu",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "rashi",
+      "name": "Rashid Safi",
+      "gen": 8,
+      "parentId": "menu",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sanad",
+      "name": "Sanad Safi",
+      "gen": 8,
+      "parentId": "menu",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "rani",
+      "name": "Rani Bedi",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Harinder Singh Bedi",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "joy",
+      "name": "Joy Bedi",
+      "gen": 7,
+      "parentId": "rani",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "rahul",
+      "name": "Ravinder Bedi",
+      "gen": 7,
+      "parentId": "rani",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Ruby Bedi",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "rabjot",
+      "name": "Rabjot Singh Bedi",
+      "gen": 8,
+      "parentId": "rahul",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "jeffraaj",
+      "name": "Jeffraaj Singh Bedi",
+      "gen": 8,
+      "parentId": "rahul",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "preeti",
+      "name": "Gurpreet Kaur Chawla (Preeti)",
+      "gen": 7,
+      "parentId": "rani",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Harvinder Singh Chawla",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "gagandeep",
+      "name": "Gagandeep Singh Chawla",
+      "gen": 8,
+      "parentId": "preeti",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Khushneet Kaur Chawla",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "nirvair",
+      "name": "Nirvair Singh Chawla",
+      "gen": 9,
+      "parentId": "gagandeep",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "karan_chawla",
+      "name": "Karan Singh Chawla",
+      "gen": 8,
+      "parentId": "preeti",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "baby",
+      "name": "Baby Bahal",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Rupinder Singh Bahal",
+          "deceased": true
+        }
+      ]
+    },
+    {
+      "id": "sapna",
+      "name": "Sapna Sood",
+      "gen": 7,
+      "parentId": "baby",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Bunty Sood",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "bunty_bahal",
+      "name": "Bunty Bahal",
+      "gen": 7,
+      "parentId": "baby",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "babli",
+      "name": "Babli Arora",
+      "gen": 6,
+      "parentId": "ram",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Savita Arora",
+          "deceased": false
+        },
+        {
+          "name": "Babloo Arora",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "ruchika",
+      "name": "Ruchika",
+      "gen": 7,
+      "parentId": "babli",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "ritika",
+      "name": "Ritika",
+      "gen": 7,
+      "parentId": "babli",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "raunak",
+      "name": "Raunak",
+      "gen": 7,
+      "parentId": "babli",
+      "deceased": true,
+      "spouses": []
+    },
+    {
+      "id": "ridhima",
+      "name": "Ridhima Vig",
+      "gen": 7,
+      "parentId": "babli",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Rimpy Vig",
+          "deceased": false
+        }
+      ]
+    },
+    {
+      "id": "aman",
+      "name": "Aman Vig",
+      "gen": 8,
+      "parentId": "ridhima",
+      "deceased": false,
+      "spouses": []
+    },
+    {
+      "id": "sahib",
+      "name": "Sahib Arora",
+      "gen": 7,
+      "parentId": "babli",
+      "deceased": false,
+      "spouses": [
+        {
+          "name": "Simran Arora",
+          "deceased": false
+        }
+      ]
+    }
+  ]
+}
