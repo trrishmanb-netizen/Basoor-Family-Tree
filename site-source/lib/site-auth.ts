@@ -1,6 +1,5 @@
 import { env } from "cloudflare:workers";
 
-export const ADMIN_EMAIL = "trrishman.b@gmail.com";
 export const GITHUB_ORIGIN = "https://trrishmanb-netizen.github.io";
 export const SESSION_COOKIE = "basoor_session";
 export type Viewer = { userId:string; name:string; email:string; approved:boolean; admin:boolean; memberId:string|null };

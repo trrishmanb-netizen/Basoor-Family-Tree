@@ -5,7 +5,6 @@ import { apiFetch, onGithubPages, setAuthToken } from "../lib/api-client";
 
 export default function Signin({ onSignedIn }: { onSignedIn?: () => void }) {
   const [mode, setMode] = useState<"login" | "signup">("login");
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
 
@@ -52,9 +51,8 @@ export default function Signin({ onSignedIn }: { onSignedIn?: () => void }) {
       </div>
       <form className="form-stack" onSubmit={submit}>
         {mode === "signup" && <div><label className="form-label">Your name</label><input className="field" name="name" required maxLength={100} autoComplete="name" /></div>}
-        <div><label className="form-label">Email</label><input className="field" type="email" name="email" value={email} onChange={event => setEmail(event.target.value)} required maxLength={200} autoComplete="email" /></div>
-        <div><label className="form-label">Password</label><input className="field" type="password" name="password" required minLength={mode === "signup" ? 12 : 1} maxLength={128} autoComplete={mode === "signup" ? "new-password" : "current-password"} />{mode === "signup" && <small>Use at least 12 characters.</small>}</div>
-        {mode === "signup" && email.trim().toLowerCase() === "trrishman.b@gmail.com" && <div><label className="form-label">Administrator setup code</label><input className="field" type="password" name="adminSetupCode" required autoComplete="off" /></div>}
+        <div><label className="form-label">Email</label><input className="field" type="email" name="email" required maxLength={200} autoComplete="email" /></div>
+        <div><label className="form-label">Password</label><input className="field" type="password" name="password" required autoComplete={mode === "signup" ? "new-password" : "current-password"} /></div>
         <button className="gold-button" disabled={busy}>{busy ? "Please wait…" : mode === "signup" ? "Create account" : "Sign in"}</button>
       </form>
       {message && <p className="status">{message}</p>}
