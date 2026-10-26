@@ -18,7 +18,8 @@ type SourcePerson = {
   gen: number;
   parentId: string | null;
   deceased: boolean;
-  spouses: { name: string; deceased: boolean }[];
+  gender?: GenderHaze;
+  spouses: { name: string; deceased: boolean; gender?: GenderHaze }[];
 };
 
 export const people: Person[] = (source.people as SourcePerson[]).flatMap((person) => [
@@ -29,7 +30,7 @@ export const people: Person[] = (source.people as SourcePerson[]).flatMap((perso
     parentId: person.parentId,
     partnerOf: null,
     deceased: person.deceased,
-    gender: draftGender(person.name),
+    gender: person.gender ?? draftGender(person.name),
     source: "tree" as const,
   },
   ...person.spouses
@@ -41,7 +42,7 @@ export const people: Person[] = (source.people as SourcePerson[]).flatMap((perso
       parentId: null,
       partnerOf: person.id,
       deceased: spouse.deceased,
-      gender: draftGender(spouse.name),
+      gender: spouse.gender ?? draftGender(spouse.name),
       source: "partner" as const,
     })),
 ]);

@@ -180,7 +180,7 @@
       "deceased": false,
       "spouses": [
         {
-          "name": "Pinky Basoor",
+          "name": "Ravleen Basoor (Pinky)",
           "deceased": false
         }
       ]
@@ -234,7 +234,7 @@
     },
     {
       "id": "saiba",
-      "name": "Saiba Chug",
+      "name": "Sahiba Chug",
       "gen": 8,
       "parentId": "sonia_c",
       "deceased": false,
@@ -310,7 +310,7 @@
     },
     {
       "id": "guneet",
-      "name": "Gunnet Kaur Basoor",
+      "name": "Gunwet Kaur Basoor",
       "gen": 8,
       "parentId": "chinky",
       "deceased": false,
@@ -361,20 +361,22 @@
       "deceased": true,
       "spouses": [
         {
-          "name": "Rupinder Kaur",
+          "name": "Rupinder Kaur (Blory)",
           "deceased": false
         }
       ]
     },
     {
       "id": "resham",
-      "name": "Resham Basoor",
+      "name": "Jasmeet Basoor (Resham)",
+      "gender": "male",
       "gen": 7,
       "parentId": "harjeet",
       "deceased": false,
       "spouses": [
         {
-          "name": "Soni Basoor",
+          "name": "Jasmeet Basoor (Soni)",
+          "gender": "female",
           "deceased": false
         }
       ]
@@ -397,7 +399,7 @@
     },
     {
       "id": "rishu",
-      "name": "Rishu Basoor",
+      "name": "Tejmeet Basoor (Rishu)",
       "gen": 7,
       "parentId": "harjeet",
       "deceased": false,

@@ -191,3 +191,7 @@ body{background:var(--paper);color:var(--ink)}
 .home-art-bubble{background:#e9ddc9;color:#665640;box-shadow:0 7px 18px #6a563a17}
 .bubble-two{background:#e2d5c1}.bubble-three{background:#eee1ca}.bubble-four{background:#e6dccb}
 .image-loading{background:#f4efe6;color:#766c5d}
+.person-name{display:inline-flex;align-items:center;gap:.38em;max-width:100%;vertical-align:middle;text-align:left}
+.person-name>span:last-child{min-width:0}
+.diya-mark{flex:none;font-size:.88em;line-height:1;filter:saturate(.8)}
+.member-hero .person-name{justify-content:center;text-align:center}

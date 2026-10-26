@@ -8,7 +8,7 @@ const femaleNames = new Set([
   "kirti", "mahima", "mannat", "meena", "meera", "minna", "miraya",
   "mohini", "naira", "namrata", "neena", "neetu", "pinky", "pritam",
   "puneet", "rani", "rasna", "rashleen", "reena", "renu", "ridhima",
-  "ritika", "ritu", "ruby", "ruchika", "saiba", "samaira", "sapna",
+  "ritika", "ritu", "ruby", "ruchika", "saiba", "sahiba", "ravleen", "samaira", "sapna",
   "seher", "shanaya", "sharon", "shayana", "shitija", "simran",
   "sona", "sonia", "soni", "sudarshan", "sunaina", "sweety", "tanya",
   "vanshika", "varya", "veenita", "wafa", "juliette", "khushneet",
@@ -24,7 +24,7 @@ const maleNames = new Set([
   "shaurya", "suba", "sunny", "suryansh", "swai", "tony",
   "trilochan", "trrishman", "vaibhav", "vedant", "viraj", "vishal",
   "yathin", "jwala", "rashid", "sahib", "gagandeep", "saman",
-  "sanju", "resham", "chinky", "nirver", "rayaan", "sarab",
+  "sanju", "resham", "tejmeet", "chinky", "nirver", "rayaan", "sarab",
 ]);
 
 export function draftGender(name: string): GenderHaze {
